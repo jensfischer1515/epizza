@@ -51,19 +51,15 @@ public class OrderService {
     }
 
     public Page<Order> findUnassigned(Pageable pageable) {
-        return orderRepository.findByNamedQuery(OrderRepositoryWithNamedQuery.UNASSIGNED_NAME, pageable);
+        return orderRepository.findByDeliveryBoyIsNull(pageable);
     }
 
     public Order assignOrder(Order order, DeliveryJob deliveryJob) throws OrderAssignedException {
-// SCHNIPP
-        if (order.getDeliveryBoy() != null) {
-            throw new OrderAssignedException(String.format("Order '%d' is already assigned to '%s'", order.getId(), order.getDeliveryBoy()));
-        }
-        log.info("Assigning delivery job '{}' to order number {}", deliveryJob, order.getId());
-        order.setDeliveryBoy(deliveryJob.getDeliveryBoy());
-        order.setEstimatedTimeOfDelivery(deliveryJob.getEstimatedTimeOfDelivery());
-        update(order);
-// SCHNAPP
+    	    if (order.getDeliveryBoy() != null) {
+    	    		throw new OrderAssignedException("Order already assigned");
+    	    }
+    	    order.setDeliveryBoy(deliveryJob.getDeliveryBoy());
+    	    order.setEstimatedTimeOfDelivery(deliveryJob.getEstimatedTimeOfDelivery());
         return order;
     }
 

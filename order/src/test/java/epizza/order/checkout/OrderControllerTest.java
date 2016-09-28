@@ -113,9 +113,7 @@ public class OrderControllerTest {
                                 fieldWithPath("deliveryAddress.telephone").description("Your telephone"), //
                                 fieldWithPath("deliveryAddress.email").description("Your email address").optional() //
                         )
-// SCHNIPP
-                        , wiremockJson()
-// SCHNAPP
+
                     ))
         ;
 
@@ -145,10 +143,8 @@ public class OrderControllerTest {
                                 fieldWithPath("orderedAt").description("Order creation timestamp"),
                                 fieldWithPath("totalPrice").description("Total order amount"),
                                 fieldWithPath("estimatedTimeOfBakingCompletion").description("Estimated time of baking completion"),
-// SCHNIPP
-                                fieldWithPath("estimatedTimeOfDelivery").description("Estimated time of delivery"),
-                                fieldWithPath("deliveryBoy").description("Delivery boy"),
-// SCHNAPP
+                                fieldWithPath("deliveryBoy").description("Yo man, that's you!"),
+                                fieldWithPath("estimatedTimeOfDelivery").description("Your target delivery time"),
                                 fieldWithPath("comment").description("Customer's comment"),
                                 fieldWithPath("orderItems[]._links.pizza").description("Link to ordered pizza"),
                                 fieldWithPath("orderItems[].quantity").description("Number of pizzas"),
@@ -156,9 +152,7 @@ public class OrderControllerTest {
                                 fieldWithPath("deliveryAddress").description("Delivery address as POSTed when <<resources-order-create,creating an Order>>"),
                                 fieldWithPath("_links").description("<<links,Links>> to other resources")
                         )
-// SCHNIPP
-                        , wiremockJson()
-// SCHNAPP
+
                 )) //
         ;
     }
@@ -178,9 +172,7 @@ public class OrderControllerTest {
                                 fieldWithPath("page").description("<<paging,Paging>> information"),
                                 fieldWithPath("_links").description("<<links,Links>> to other resources")
                         )
-// SCHNIPP
-                        , wiremockJson()
-// SCHNAPP
+
                 )) //
         ;
     }

@@ -15,51 +15,43 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
-// SCHNIPP
+
 @RequiredArgsConstructor
 @Slf4j
-// SCHNAPP
 public class OrderServiceClientImpl implements OrderServiceClient {
 
-// SCHNIPP
-    private final RestTemplate restTemplate;
+	private final RestTemplate restTemplate;
 
-    private final URI baseUri;
-// SCHNAPP    public OrderServiceClientImpl(RestTemplate restTemplate, URI baseUri) {}
+	private final URI baseUri;
 
     @Override
-// SCHNIPP
-    @HystrixCommand
-// SCHNAPP
     public void selectOrder(Integer orderId, DeliveryJob job) {
-// SCHNIPP
-        String uri = UriComponentsBuilder.fromUri(baseUri).path("orders/" + orderId + "/delivery").toUriString();
-        log.info("Assigning myself to order via Location: {}", uri);
-        restTemplate.postForEntity(uri, job, Void.class);
-// SCHNAPP        throw new UnsupportedOperationException();
+    		URI uri = orderUri(orderId);
+    		log.info("selecting order via uri {}", uri);
+    		restTemplate.postForObject(uri, job, Void.class);
     }
 
     @Override
-// SCHNIPP
-    @HystrixCommand(fallbackMethod = "hystrixFallback")
-// SCHNAPP
+
     public PagedResources<Order> getOrders() {
-// SCHNIPP
-        URI uri = UriComponentsBuilder.fromUri(baseUri).path("/orders").build().toUri();
-        log.info("Retrieving orders from Location: {}", uri);
-        return restTemplate.exchange(
-                uri,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<PagedResources<Order>>() {}).getBody();
-// SCHNAPP        throw new UnsupportedOperationException();
+    		URI uri = ordersUri();
+    		log.info("getting orders via uri {}", uri);
+    		return restTemplate.exchange(uri, HttpMethod.GET, null, new FunnyType()).getBody();
     }
 
-// SCHNIPP
-    PagedResources<Order> hystrixFallback() {
-        log.error("Hystrix said: Need to use fallback (empty list)");
-        return new PagedResources<>(Collections.emptyList(), new PageMetadata(0, 0, 0));
-    }
-// SCHNAPP
+    
+    
+	private URI orderUri(Integer orderId) {
+		return UriComponentsBuilder.fromUri(baseUri).path("/orders/" + orderId + "/delivery").build().toUri();
+	}
+
+	private URI ordersUri() {
+		return UriComponentsBuilder.fromUri(baseUri).path("/orders").build().toUri();
+	}
+
+
+	static class FunnyType extends ParameterizedTypeReference<PagedResources<Order>> {
+		
+	}
 
 }

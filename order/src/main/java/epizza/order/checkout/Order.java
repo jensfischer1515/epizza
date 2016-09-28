@@ -29,6 +29,10 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import epizza.order.status.OrderStatus;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -45,6 +49,10 @@ import static javax.persistence.GenerationType.IDENTITY;
                 query = OrderRepositoryWithNamedQuery.COUNT_UNASSIGNED_QUERY
         )
 })
+@Getter
+@Setter
+@EqualsAndHashCode(of="id")
+@ToString(of={"id", "orderItems"})
 public class Order implements Identifiable<Long> {
 
     private static final Money DEFAULT_PRICE = Money.of(0.0, "EUR");
@@ -75,12 +83,10 @@ public class Order implements Identifiable<Long> {
     @Column(name = "ETBC")
     private LocalDateTime estimatedTimeOfBakingCompletion;
 
-// SCHNIPP
-    @Column(name = "ETD")
-    private LocalDateTime estimatedTimeOfDelivery;
-
+    @Basic
     private String deliveryBoy;
-// SCHNAPP
+
+    private LocalDateTime estimatedTimeOfDelivery;
 
     public List<OrderItem> getOrderItems() {
         return ImmutableList.copyOf(orderItems);
@@ -97,103 +103,4 @@ public class Order implements Identifiable<Long> {
         this.totalPrice = this.totalPrice.add(orderItem.getPrice());
     }
 
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getOrderedAt() {
-        return orderedAt;
-    }
-
-    public void setOrderedAt(LocalDateTime orderedAt) {
-        this.orderedAt = orderedAt;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public MonetaryAmount getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(MonetaryAmount totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public Address getDeliveryAddress() {
-        return deliveryAddress;
-    }
-
-    public void setDeliveryAddress(Address deliveryAddress) {
-        this.deliveryAddress = deliveryAddress;
-    }
-
-    public LocalDateTime getEstimatedTimeOfBakingCompletion() {
-        return estimatedTimeOfBakingCompletion;
-    }
-
-    public void setEstimatedTimeOfBakingCompletion(LocalDateTime estimatedTimeOfBakingCompletion) {
-        this.estimatedTimeOfBakingCompletion = estimatedTimeOfBakingCompletion;
-    }
-
-// SCHNIPP
-    public String getDeliveryBoy() {
-        return deliveryBoy;
-    }
-
-    public void setDeliveryBoy(String deliveryBoy) {
-        this.deliveryBoy = deliveryBoy;
-    }
-
-    public LocalDateTime getEstimatedTimeOfDelivery() {
-        return estimatedTimeOfDelivery;
-    }
-
-    public void setEstimatedTimeOfDelivery(LocalDateTime estimatedTimeOfDelivery) {
-        this.estimatedTimeOfDelivery = estimatedTimeOfDelivery;
-    }
-// SCHNAPP
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Order order = (Order) o;
-        return Objects.equal(id, order.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this) //
-                .add("id", id) //
-                .add("orderItems", orderItems) //
-                .toString();
-    }
 }

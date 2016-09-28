@@ -23,9 +23,7 @@ import static java.util.Collections.emptyList;
 @RequiredArgsConstructor
 public class OrderRepositoryImpl implements
         OrderRepositoryWithNamedQuery
-// SCHNIPP
-        , OrderRepositoryWithCriteraQuery
-// SCHNAPP
+
 {
 
     private final EntityManager entityManager;
@@ -50,38 +48,5 @@ public class OrderRepositoryImpl implements
         return new PageImpl<>(content, pageable, total);
     }
 
-// SCHNIPP
-    @Override
-    public Page<Order> findUnassigned(Pageable pageable) {
-        CriteriaQuery<Order> criteria = entityManager.getCriteriaBuilder().createQuery(Order.class);
-        Root<Order> orders = criteria.from(Order.class);
-        Path<String> deliveryBoy = orders.get("deliveryBoy");
 
-        criteria.select(orders).where(isNull(deliveryBoy));
-
-        TypedQuery<Order> query = entityManager.createQuery(criteria);
-        Long total = countUnassigned();
-        return readPage(query, pageable, total);
-    }
-
-    @Override
-    public Long countUnassigned() {
-        CriteriaQuery<Long> criteria = entityManager.getCriteriaBuilder().createQuery(Long.class);
-        Root<Order> orders = criteria.from(Order.class);
-        Path<String> deliveryBoy = orders.get("deliveryBoy");
-
-        criteria.select(count(orders)).where(isNull(deliveryBoy));
-
-        TypedQuery<Long> query = entityManager.createQuery(criteria);
-        return query.getSingleResult();
-    }
-
-    private Predicate isNull(Path<?> path) {
-        return entityManager.getCriteriaBuilder().isNull(path);
-    }
-
-    private Expression<Long> count(Root<?> root) {
-        return entityManager.getCriteriaBuilder().count(root);
-    }
-// SCHNAPP
 }

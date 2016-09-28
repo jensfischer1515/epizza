@@ -15,21 +15,16 @@ import epizza.order.checkout.OrderService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-// SCHNIPP
-@RequiredArgsConstructor
-// SCHNAPP
+
 @RequestMapping(path = "/orders/{id}/delivery")
+@RequiredArgsConstructor
 public class DeliveryController {
 
-// SCHNIPP
-    private final OrderService orderService;
-// SCHNAPP
+	private final OrderService orderService;
 
     @RequestMapping(path = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> assignDelivery(@PathVariable("id") Order order, @RequestBody @Valid DeliveryJob deliveryJob) {
-// SCHNIPP
         orderService.assignOrder(order, deliveryJob);
-// SCHNAPP
         return ResponseEntity.noContent().build();
     }
 }
