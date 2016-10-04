@@ -119,10 +119,7 @@ public class DeliveryControllerTest {
     private void thenOrderShouldHaveDeliveryBoy() {
         resultAction = mockMvc.perform(get(orderUri))
                 .andDo(print())
-// SCHNIPP
-                .andExpect(jsonPath("$.deliveryBoy", is("Fred Firestove")))
-                .andExpect(jsonPath("$.estimatedTimeOfDelivery", is("2016-09-14T20:05:00")))
-// SCHNAPP
+
                 ;
     }
 

@@ -47,21 +47,15 @@ public class OrderService {
     }
 
     public Page<Order> getAll(Pageable pageable) {
-// SCHNIPP
-        return orderRepository.findByDeliveryBoyIsNull(pageable);
-// SCHNAPP         return orderRepository.findAll(pageable);
+         return orderRepository.findByDeliveryBoyIsNull(pageable);
     }
 
     public Order assignDelivery(Order order, DeliveryJob deliveryJob) throws OrderAssignedException {
-// SCHNIPP
-        if (order.getDeliveryBoy() != null) {
-            throw new OrderAssignedException(String.format("Order '%d' is already assigned to '%s'", order.getId(), order.getDeliveryBoy()));
+        if(order.getDeliveryBoy() != null) {
+            throw new OrderAssignedException("Order is already assigned.");
         }
-        log.info("Assigning delivery job '{}' to order number {}", deliveryJob, order.getId());
         order.setDeliveryBoy(deliveryJob.getDeliveryBoy());
         order.setEstimatedTimeOfDelivery(deliveryJob.getEstimatedTimeOfDelivery());
-        update(order);
-// SCHNAPP
         return order;
     }
 
