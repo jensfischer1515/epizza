@@ -39,21 +39,25 @@ public class OrderService {
     }
 
     public Order update(Order order) {
+
         return orderRepository.save(order);
+
     }
 
     public Optional<Order> getOrder(Long id) {
+
         return Optional.ofNullable(orderRepository.findOne(id));
+
     }
 
     public Page<Order> getAll(Pageable pageable) {
-// SCHNIPP
+
         return orderRepository.findByDeliveryBoyIsNull(pageable);
-// SCHNAPP         return orderRepository.findAll(pageable);
+
     }
 
     public Order assignDelivery(Order order, DeliveryJob deliveryJob) throws OrderAssignedException {
-// SCHNIPP
+
         if (order.getDeliveryBoy() != null) {
             throw new OrderAssignedException(String.format("Order '%d' is already assigned to '%s'", order.getId(), order.getDeliveryBoy()));
         }
@@ -61,7 +65,7 @@ public class OrderService {
         order.setDeliveryBoy(deliveryJob.getDeliveryBoy());
         order.setEstimatedTimeOfDelivery(deliveryJob.getEstimatedTimeOfDelivery());
         update(order);
-// SCHNAPP
+
         return order;
     }
 

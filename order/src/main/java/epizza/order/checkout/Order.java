@@ -63,12 +63,12 @@ public class Order implements Identifiable<Long> {
     @Column(name = "ETBC")
     private LocalDateTime estimatedTimeOfBakingCompletion;
 
-// SCHNIPP
+
     @Column(name = "ETD")
     private LocalDateTime estimatedTimeOfDelivery;
 
     private String deliveryBoy;
-// SCHNAPP
+
 
     public List<OrderItem> getOrderItems() {
         return ImmutableList.copyOf(orderItems);
@@ -142,7 +142,7 @@ public class Order implements Identifiable<Long> {
         this.estimatedTimeOfBakingCompletion = estimatedTimeOfBakingCompletion;
     }
 
-// SCHNIPP
+
     public String getDeliveryBoy() {
         return deliveryBoy;
     }
@@ -158,7 +158,7 @@ public class Order implements Identifiable<Long> {
     public void setEstimatedTimeOfDelivery(LocalDateTime estimatedTimeOfDelivery) {
         this.estimatedTimeOfDelivery = estimatedTimeOfDelivery;
     }
-// SCHNAPP
+
 
     @Override
     public boolean equals(Object o) {

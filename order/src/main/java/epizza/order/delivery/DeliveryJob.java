@@ -8,7 +8,7 @@ import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
 
 public class DeliveryJob {
-// SCHNIPP
+
     private final String deliveryBoy;
 
     private final LocalDateTime estimatedTimeOfDelivery;
@@ -35,5 +35,4 @@ public class DeliveryJob {
                 .add("estimatedTimeOfDelivery", estimatedTimeOfDelivery)
                 .toString();
     }
-// SCHNAPP
 }

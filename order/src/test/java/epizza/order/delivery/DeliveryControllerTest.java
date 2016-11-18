@@ -66,7 +66,7 @@ public class DeliveryControllerTest {
     private URI orderUri;
 
     @Before
-    public void setupContext(){
+    public void setupContext() {
         mockMvc = webAppContextSetup(context)
                 .apply(documentationConfiguration(this.restDocumentation).uris().withPort(80))
                 .build();
@@ -103,8 +103,8 @@ public class DeliveryControllerTest {
 
         resultAction = mockMvc.perform(
                 post(deliveryLinks.get(0).getHref())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(deliveryInputData()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(deliveryInputData()))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
                 .andDo(document("delivery-create", requestFields(
@@ -112,30 +112,30 @@ public class DeliveryControllerTest {
                         fieldWithPath("estimatedTimeOfDelivery").description("Estimated delivery time")
                         )
                         , wiremockJson()
-                        ));
+                ));
     }
 
     @SneakyThrows
     private void thenOrderShouldHaveDeliveryBoy() {
         resultAction = mockMvc.perform(get(orderUri))
                 .andDo(print())
-// SCHNIPP
+
                 .andExpect(jsonPath("$.deliveryBoy", is("Fred Firestove")))
                 .andExpect(jsonPath("$.estimatedTimeOfDelivery", is("2016-09-14T20:05:00")))
-// SCHNAPP
-                ;
+
+        ;
     }
 
     @SneakyThrows
     private String deliveryInputData() {
         return new ObjectMapper().writeValueAsString(
                 ImmutableMap.of(
-                "deliveryBoy" , "Fred Firestove",
-                "estimatedTimeOfDelivery", "2016-09-14T20:05:00"
-            )
+                        "deliveryBoy", "Fred Firestove",
+                        "estimatedTimeOfDelivery", "2016-09-14T20:05:00"
+                )
         );
     }
-    
+
     @SneakyThrows
     private String orderInputData() {
         ImmutableMap<String, String> address = ImmutableMap.<String, String>builder()
@@ -151,8 +151,8 @@ public class DeliveryControllerTest {
                 "comment", "Some comment",
                 "deliveryAddress", address,
                 "lineItems", ImmutableList.of(ImmutableMap.of(
-                                "quantity", 1,
-                                "pizza", "http://localhost/pizzas/1"
+                        "quantity", 1,
+                        "pizza", "http://localhost/pizzas/1"
                         )
                 )
         ));

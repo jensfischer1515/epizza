@@ -1,5 +1,21 @@
 package epizza.order;
 
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.restdocs.JUnitRestDocumentation;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import javax.servlet.RequestDispatcher;
+
+import lombok.SneakyThrows;
+
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
@@ -12,22 +28,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import lombok.SneakyThrows;
-
-import javax.servlet.RequestDispatcher;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.restdocs.JUnitRestDocumentation;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 
 @RunWith(SpringRunner.class)
@@ -76,14 +76,14 @@ public class ApiDocumentation {
     @SneakyThrows
     public void indexExample() {
         this.mockMvc.perform(get("/").accept(MediaTypes.HAL_JSON))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andDo(document("index-example",
-                links(
-                        linkWithRel("orders").description("The <<resources-orders,Orders resource>>"),
-                        linkWithRel("pizzas").description("The <<resources-pizzas,Pizzas resource>>"),
-                        linkWithRel("profile").ignored()
-                )));
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("index-example",
+                        links(
+                                linkWithRel("orders").description("The <<resources-orders,Orders resource>>"),
+                                linkWithRel("pizzas").description("The <<resources-pizzas,Pizzas resource>>"),
+                                linkWithRel("profile").ignored()
+                        )));
     }
 
 }
