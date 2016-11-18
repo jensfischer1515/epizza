@@ -13,20 +13,16 @@ import epizza.shared.event.AbstractEventSubscriber;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class AbstractOrderStatusEventSubscriber extends AbstractEventSubscriber {
+public abstract class AbstractOrderEventSubscriber extends AbstractEventSubscriber {
 
     private final OrderService orderService;
 
-    private final OrderStatus orderStatus;
-
-    protected AbstractOrderStatusEventSubscriber(OrderService orderService,
-                                                 ObjectMapper objectMapper,
-                                                 String type,
-                                                 OrderStatus orderStatus
+    protected AbstractOrderEventSubscriber(OrderService orderService,
+                                           ObjectMapper objectMapper,
+                                           String type
     ) {
         super(objectMapper, type);
         this.orderService = orderService;
-        this.orderStatus = orderStatus;
     }
 
     @Override
@@ -36,13 +32,12 @@ public abstract class AbstractOrderStatusEventSubscriber extends AbstractEventSu
         Order order = orderService.getOrder(orderId)
                 .orElseThrow(() -> new IllegalArgumentException(String.format("Order %s not found", orderId)));
 
-        enhanceOrder(order, payload);
+        handleOrder(order, payload);
 
-        order.setStatus(orderStatus);
         orderService.update(order);
     }
 
-    protected void enhanceOrder(Order order, Map<String, Object> payload) {
+    protected void handleOrder(Order order, Map<String, Object> payload) {
         //add logic in implementation if needed
     }
 

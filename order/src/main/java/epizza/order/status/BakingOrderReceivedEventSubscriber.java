@@ -13,18 +13,19 @@ import epizza.order.checkout.Order;
 import epizza.order.checkout.OrderService;
 
 @Component
-public class BakingOrderReceivedEventSubscriber extends AbstractOrderStatusEventSubscriber {
+public class BakingOrderReceivedEventSubscriber extends AbstractOrderEventSubscriber {
 
     @Autowired
     public BakingOrderReceivedEventSubscriber(OrderService orderService, ObjectMapper objectMapper) {
-        super(orderService, objectMapper, "BakingOrderReceived", OrderStatus.BAKING);
+        super(orderService, objectMapper, "BakingOrderReceived");
     }
 
     @Override
-    protected void enhanceOrder(Order order, Map<String, Object> payload) {
+    protected void handleOrder(Order order, Map<String, Object> payload) {
         LocalDateTime estimatedTimeOfCompletion = LocalDateTime
                 .parse(payload.get("estimatedTimeOfCompletion").toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
         order.setEstimatedTimeOfBakingCompletion(estimatedTimeOfCompletion);
+        order.setStatus(OrderStatus.BAKING);
     }
 }
