@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import epizza.order.delivery.DeliveryJob;
+import epizza.order.status.DeliveryStatus;
+import epizza.order.status.OrderStatus;
+import epizza.order.status.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -86,4 +89,30 @@ public class OrderService {
             super(message);
         }
     }
+
+    public static class OrderStatusEmptyException extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+
+        public OrderStatusEmptyException(String message) {
+            super(message);
+        }
+    }
+
+    public OrderStatus getOverallStatus(PaymentStatus paymentStatus, DeliveryStatus deliveryStatus) {
+
+        OrderStatus orderStatus = null;
+
+        if (paymentStatus == null || deliveryStatus == null){
+            throw new OrderStatusEmptyException("status not null");
+        }
+
+        if (paymentStatus == PaymentStatus.FAILED && deliveryStatus == DeliveryStatus.FAILED){
+            orderStatus = OrderStatus.FAILED;
+        }else if (paymentStatus == PaymentStatus.FAILED && deliveryStatus == DeliveryStatus.DELIVERED){
+            orderStatus = OrderStatus.THIRD_PARTY_ERROR;
+        }
+
+        return orderStatus;
+    }
+
 }

@@ -3,6 +3,7 @@ package epizza.order.checkout;
 import com.google.common.collect.ImmutableList;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -16,11 +17,14 @@ import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import epizza.order.OrderApplicationTest;
 import epizza.order.catalog.Pizza;
 import epizza.order.catalog.PizzaRepository;
+import epizza.order.status.DeliveryStatus;
 import epizza.order.status.OrderStatus;
+import epizza.order.status.PaymentStatus;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -57,13 +61,11 @@ public class OrderServiceTest {
     @Before
     public void createOrder() {
         order1 = new Order();
-        order1.setStatus(OrderStatus.NEW);
         order1.setDeliveryAddress(address());
         order1.setOrderItems(ImmutableList.of(orderItem()));
         order1 = orderService.create(order1);
 
         order2 = new Order();
-        order2.setStatus(OrderStatus.NEW);
         order2.setDeliveryAddress(address());
         order2.setOrderItems(ImmutableList.of(orderItem()));
         order2.setDeliveryBoy("Guy XY");
@@ -90,6 +92,35 @@ public class OrderServiceTest {
         then(unassignedOrders.getContent()).extracting(Order::getId).containsOnly(order1.getId());
     }
 
+
+    @Test
+    public void get_overall_status_failed_failed(){
+
+        //Given
+        PaymentStatus paymentStatus = PaymentStatus.FAILED;
+        DeliveryStatus deliveryStatus = DeliveryStatus.FAILED;
+        //When
+        OrderStatus orderStatus = orderService.getOverallStatus(paymentStatus, deliveryStatus);
+
+        //then
+        Assert.assertEquals("The status should be failed", OrderStatus.FAILED , orderStatus);
+
+    }
+
+    @Test
+    public void get_overall_status_failed_delivered(){
+
+        //Given
+        PaymentStatus paymentStatus = PaymentStatus.FAILED;
+        DeliveryStatus deliveryStatus = DeliveryStatus.DELIVERED;
+        //When
+        OrderStatus orderStatus = orderService.getOverallStatus(paymentStatus, deliveryStatus);
+
+        //then
+        Assert.assertEquals("The status should be failed", OrderStatus.THIRD_PARTY_ERROR , orderStatus);
+
+    }
+
     private OrderItem orderItem() {
         return OrderItem.builder()
                 .pizza(pizza())
@@ -111,4 +142,19 @@ public class OrderServiceTest {
                 .telephone("555-shoe")
                 .build();
     }
+
+    private void getOrderStatusExistingId(Long pOrderId){
+        Order objOrder = null;
+
+        if (pOrderId == null){
+            Assert.fail("Illegal Argument, order not null");
+        }
+
+        Optional<Order> order = orderService.getOrder(pOrderId);
+
+        if (!order.isPresent()){
+            Assert.fail("There is no  order in database");
+        }
+    }
+
 }

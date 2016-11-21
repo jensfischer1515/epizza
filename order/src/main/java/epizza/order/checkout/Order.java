@@ -25,12 +25,19 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import epizza.order.status.DeliveryStatus;
 import epizza.order.status.OrderStatus;
+import epizza.order.status.PaymentStatus;
+import lombok.Getter;
+import lombok.Setter;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
+@Getter
+@Setter
 @Access(AccessType.FIELD)
 @Table(name = "PIZZA_ORDER")
 public class Order implements Identifiable<Long> {
@@ -46,7 +53,16 @@ public class Order implements Identifiable<Long> {
 
     @Enumerated(value = EnumType.STRING)
     @Basic(optional = false)
-    private OrderStatus status = OrderStatus.NEW;
+    @Transient
+    private OrderStatus orderStatus = OrderStatus.IN_PROCESS;
+
+    @Enumerated(value = EnumType.STRING)
+    @Basic(optional = false)
+    private DeliveryStatus deliveryStatus = DeliveryStatus.PENDING;
+
+    @Enumerated(value = EnumType.STRING)
+    @Basic(optional = false)
+    private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 
     @ElementCollection
     @CollectionTable(name = "PIZZA_ORDER_ITEM")
@@ -102,14 +118,6 @@ public class Order implements Identifiable<Long> {
         this.orderedAt = orderedAt;
     }
 
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
     public String getComment() {
         return comment;
     }
@@ -142,7 +150,6 @@ public class Order implements Identifiable<Long> {
         this.estimatedTimeOfBakingCompletion = estimatedTimeOfBakingCompletion;
     }
 
-
     public String getDeliveryBoy() {
         return deliveryBoy;
     }
@@ -157,6 +164,48 @@ public class Order implements Identifiable<Long> {
 
     public void setEstimatedTimeOfDelivery(LocalDateTime estimatedTimeOfDelivery) {
         this.estimatedTimeOfDelivery = estimatedTimeOfDelivery;
+    }
+
+    public OrderStatus getCurrentStatus(){
+
+        if (paymentStatus == PaymentStatus.FAILED && deliveryStatus == DeliveryStatus.FAILED){
+            return  OrderStatus.FAILED;
+        }
+        if (paymentStatus == PaymentStatus.FAILED && deliveryStatus == DeliveryStatus.DELIVERED){
+            return  OrderStatus.THIRD_PARTY_ERROR;
+        }
+        if (paymentStatus == PaymentStatus.FAILED && deliveryStatus == DeliveryStatus.SHIPPED){
+            return  OrderStatus.THIRD_PARTY_ERROR;
+        }
+        if (paymentStatus == PaymentStatus.FAILED && deliveryStatus == DeliveryStatus.PENDING){
+            return  OrderStatus.THIRD_PARTY_ERROR;
+        }
+        if (paymentStatus == PaymentStatus.PAID && deliveryStatus == DeliveryStatus.FAILED){
+            return  OrderStatus.FAILED;
+        }
+        if (paymentStatus == PaymentStatus.PAID && deliveryStatus == DeliveryStatus.DELIVERED){
+            return  OrderStatus.DONE;
+        }
+        if (paymentStatus == PaymentStatus.PAID && deliveryStatus == DeliveryStatus.SHIPPED){
+            return  OrderStatus.IN_PROCESS;
+        }
+        if (paymentStatus == PaymentStatus.PAID && deliveryStatus == DeliveryStatus.PENDING){
+            return  OrderStatus.IN_PROCESS;
+        }
+        if (paymentStatus == PaymentStatus.PENDING && deliveryStatus == DeliveryStatus.FAILED){
+            return  OrderStatus.FAILED;
+        }
+        if (paymentStatus == PaymentStatus.PENDING && deliveryStatus == DeliveryStatus.DELIVERED){
+            return  OrderStatus.THIRD_PARTY_ERROR;
+        }
+        if (paymentStatus == PaymentStatus.PENDING && deliveryStatus == DeliveryStatus.SHIPPED){
+            return  OrderStatus.IN_PROCESS;
+        }
+        if (paymentStatus == PaymentStatus.PENDING && deliveryStatus == DeliveryStatus.PENDING){
+            return  OrderStatus.IN_PROCESS;
+        }
+
+        return null;
     }
 
 

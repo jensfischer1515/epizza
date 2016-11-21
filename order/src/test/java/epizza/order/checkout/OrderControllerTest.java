@@ -132,7 +132,6 @@ public class OrderControllerTest {
 
         ordersResultAction
                 .andExpect(status().is(HttpStatus.OK.value()))
-                .andExpect(jsonPath("$.status", is(order.getStatus().name())))
                 .andExpect(jsonPath("$.totalPrice", notNullValue()))
                 .andExpect(jsonPath("$.orderItems", hasSize(order.getOrderItems().size())))
                 .andExpect(jsonPath("$.deliveryAddress.firstname", is(order.getDeliveryAddress().getFirstname())))

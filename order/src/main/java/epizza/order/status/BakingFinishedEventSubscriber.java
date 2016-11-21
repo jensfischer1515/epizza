@@ -20,6 +20,5 @@ public class BakingFinishedEventSubscriber extends AbstractOrderEventSubscriber 
 
     @Override
     protected void handleOrder(Order order, Map<String, Object> payload) {
-        order.setStatus(OrderStatus.DELIVERING);
     }
 }

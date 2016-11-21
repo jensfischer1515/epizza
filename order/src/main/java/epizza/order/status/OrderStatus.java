@@ -1,7 +1,8 @@
 package epizza.order.status;
 
 public enum OrderStatus {
-    NEW,
-    BAKING,
-    DELIVERING
+    IN_PROCESS,
+    FAILED,
+    DONE,
+    THIRD_PARTY_ERROR
 }

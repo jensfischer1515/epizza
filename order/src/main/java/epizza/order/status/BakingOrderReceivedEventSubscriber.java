@@ -26,6 +26,5 @@ public class BakingOrderReceivedEventSubscriber extends AbstractOrderEventSubscr
                 .parse(payload.get("estimatedTimeOfCompletion").toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
         order.setEstimatedTimeOfBakingCompletion(estimatedTimeOfCompletion);
-        order.setStatus(OrderStatus.BAKING);
     }
 }
