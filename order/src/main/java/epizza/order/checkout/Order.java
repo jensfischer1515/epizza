@@ -168,44 +168,23 @@ public class Order implements Identifiable<Long> {
 
     public OrderStatus getCurrentStatus(){
 
-        if (paymentStatus == PaymentStatus.FAILED && deliveryStatus == DeliveryStatus.FAILED){
+        if (deliveryStatus == DeliveryStatus.FAILED){
             return  OrderStatus.FAILED;
         }
-        if (paymentStatus == PaymentStatus.FAILED && deliveryStatus == DeliveryStatus.DELIVERED){
+        if (paymentStatus == PaymentStatus.FAILED){
             return  OrderStatus.THIRD_PARTY_ERROR;
         }
-        if (paymentStatus == PaymentStatus.FAILED && deliveryStatus == DeliveryStatus.SHIPPED){
-            return  OrderStatus.THIRD_PARTY_ERROR;
+        if (deliveryStatus == DeliveryStatus.PENDING){
+            return  OrderStatus.IN_PROCESS;
         }
-        if (paymentStatus == PaymentStatus.FAILED && deliveryStatus == DeliveryStatus.PENDING){
-            return  OrderStatus.THIRD_PARTY_ERROR;
+        if (deliveryStatus == DeliveryStatus.SHIPPED){
+            return  OrderStatus.IN_PROCESS;
         }
-        if (paymentStatus == PaymentStatus.PAID && deliveryStatus == DeliveryStatus.FAILED){
-            return  OrderStatus.FAILED;
-        }
-        if (paymentStatus == PaymentStatus.PAID && deliveryStatus == DeliveryStatus.DELIVERED){
+        if (paymentStatus == PaymentStatus.PAID){
             return  OrderStatus.DONE;
-        }
-        if (paymentStatus == PaymentStatus.PAID && deliveryStatus == DeliveryStatus.SHIPPED){
-            return  OrderStatus.IN_PROCESS;
-        }
-        if (paymentStatus == PaymentStatus.PAID && deliveryStatus == DeliveryStatus.PENDING){
-            return  OrderStatus.IN_PROCESS;
-        }
-        if (paymentStatus == PaymentStatus.PENDING && deliveryStatus == DeliveryStatus.FAILED){
-            return  OrderStatus.FAILED;
-        }
-        if (paymentStatus == PaymentStatus.PENDING && deliveryStatus == DeliveryStatus.DELIVERED){
+        }else{
             return  OrderStatus.THIRD_PARTY_ERROR;
         }
-        if (paymentStatus == PaymentStatus.PENDING && deliveryStatus == DeliveryStatus.SHIPPED){
-            return  OrderStatus.IN_PROCESS;
-        }
-        if (paymentStatus == PaymentStatus.PENDING && deliveryStatus == DeliveryStatus.PENDING){
-            return  OrderStatus.IN_PROCESS;
-        }
-
-        return null;
     }
 
 
