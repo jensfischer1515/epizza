@@ -1,12 +1,6 @@
 package epizza.order.checkout;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-
-import org.javamoney.moneta.Money;
-import org.springframework.hateoas.Identifiable;
+import static javax.persistence.GenerationType.IDENTITY;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,15 +14,17 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import epizza.order.status.OrderStatus;
+import org.javamoney.moneta.Money;
+import org.springframework.hateoas.Identifiable;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 @Entity
 @Access(AccessType.FIELD)
@@ -43,10 +39,6 @@ public class Order implements Identifiable<Long> {
 
     @Basic(optional = false)
     private LocalDateTime orderedAt;
-
-    @Enumerated(value = EnumType.STRING)
-    @Basic(optional = false)
-    private OrderStatus status = OrderStatus.NEW;
 
     @ElementCollection
     @CollectionTable(name = "PIZZA_ORDER_ITEM")
@@ -100,14 +92,6 @@ public class Order implements Identifiable<Long> {
 
     public void setOrderedAt(LocalDateTime orderedAt) {
         this.orderedAt = orderedAt;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
     }
 
     public String getComment() {

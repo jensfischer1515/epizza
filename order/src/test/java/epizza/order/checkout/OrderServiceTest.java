@@ -1,6 +1,8 @@
 package epizza.order.checkout;
 
-import com.google.common.collect.ImmutableList;
+import static org.assertj.core.api.BDDAssertions.then;
+
+import java.util.Objects;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,14 +17,11 @@ import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
+import com.google.common.collect.ImmutableList;
 
 import epizza.order.OrderApplicationTest;
 import epizza.order.catalog.Pizza;
 import epizza.order.catalog.PizzaRepository;
-import epizza.order.status.OrderStatus;
-
-import static org.assertj.core.api.BDDAssertions.then;
 
 @Transactional
 @OrderApplicationTest(properties = {
@@ -57,18 +56,15 @@ public class OrderServiceTest {
     @Before
     public void createOrder() {
         order1 = new Order();
-        order1.setStatus(OrderStatus.NEW);
         order1.setDeliveryAddress(address());
         order1.setOrderItems(ImmutableList.of(orderItem()));
         order1 = orderService.create(order1);
 
         order2 = new Order();
-        order2.setStatus(OrderStatus.NEW);
-        order2.setDeliveryAddress(address());
         order2.setOrderItems(ImmutableList.of(orderItem()));
+        order2.setDeliveryAddress(address());
         order2.setDeliveryBoy("Guy XY");
         order2 = orderService.create(order2);
-
     }
 
     @After

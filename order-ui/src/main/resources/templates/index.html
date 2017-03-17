@@ -141,12 +141,7 @@
         </div>
       </div>
       <div id="cart" class="panel panel-default col-xs-4 col-md-offset-1">
-
-          <div class="alert ng-class:{'alert-warning': currentOrder.status==='NEW', 'alert-info': currentOrder.status==='BAKING', 'alert-success': currentOrder.status==='DELIVERING'}" style="margin-top: 10px;" role="alert" ng-show="currentOrder">
-            <b>Order Status: {{currentOrder.status}}</b>
-            <br/><span ng:show="{{currentOrder.estimatedTimeOfDelivery}}">Estimated delivery: {{currentOrder.estimatedTimeOfDelivery}}</span>
-          </div>
-          <div class="panel panel-default" style="margin-top: 10px;">
+            <div class="panel panel-default" style="margin-top: 10px;">
             <div class="panel-heading">Cart</div>
             <table class="table table-striped">
                 <thead>

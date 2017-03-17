@@ -1,11 +1,10 @@
 package epizza.order.delivery;
 
-import com.google.common.base.MoreObjects;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.google.common.base.MoreObjects;
 
 public class DeliveryJob {
 
