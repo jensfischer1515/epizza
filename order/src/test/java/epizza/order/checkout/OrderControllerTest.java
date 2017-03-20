@@ -38,6 +38,7 @@ import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -124,6 +125,32 @@ public class OrderControllerTest {
 
     @Test
     @SneakyThrows
+    public void should_update_order_status() {
+        givenExistingOrder();
+
+        whenOrderStatusUpdated(order.getId());
+
+        ordersResultAction
+                .andExpect(status().is(HttpStatus.OK.value()))
+                .andExpect(jsonPath("$.status", is(OrderStatus.DELIVERING.toString())));
+    }
+
+    @Test
+    @SneakyThrows
+    public void should_fail_with_not_found() {
+        whenOrderStatusUpdated(123L);
+
+        ordersResultAction
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()));
+    }
+
+    @Test
+    public void should_fail_with_bad_request() {
+        //If the response content is a part of contract, this can be covered
+    }
+
+    @Test
+    @SneakyThrows
     public void should_get_order() {
         givenExistingOrder();
 
@@ -131,6 +158,7 @@ public class OrderControllerTest {
 
         ordersResultAction
                 .andExpect(status().is(HttpStatus.OK.value()))
+                .andExpect(jsonPath("$.status",  is(OrderStatus.NEW.toString())))
                 .andExpect(jsonPath("$.totalPrice", notNullValue()))
                 .andExpect(jsonPath("$.orderItems", hasSize(order.getOrderItems().size())))
                 .andExpect(jsonPath("$.deliveryAddress.firstname", is(order.getDeliveryAddress().getFirstname())))
@@ -140,6 +168,7 @@ public class OrderControllerTest {
                 .andDo(document("order-get",
                         responseFields(
                                 fieldWithPath("_id").description("Order identifier"),
+                                fieldWithPath("status").description("order status"),
                                 fieldWithPath("orderedAt").description("Order creation timestamp"),
                                 fieldWithPath("totalPrice").description("Total order amount"),
                                 fieldWithPath("estimatedTimeOfBakingCompletion").description("Estimated time of baking completion"),
@@ -159,6 +188,16 @@ public class OrderControllerTest {
 
                 )) //
         ;
+    }
+
+    @SneakyThrows
+    private void whenOrderStatusUpdated(Long orderId) {
+        URI orderUri = entityLinks.linkForSingleResource(Order.class, orderId).toUri();
+
+        ordersResultAction = mockMvc.perform(MockMvcRequestBuilders.put(orderUri)
+                .param("nextStatus", OrderStatus.DELIVERING.toString())
+                .accept(MediaTypes.HAL_JSON))
+                .andDo(print());
     }
 
     @Test

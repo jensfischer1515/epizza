@@ -14,6 +14,8 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -64,6 +66,17 @@ public class Order implements Identifiable<Long> {
 
     public List<OrderItem> getOrderItems() {
         return ImmutableList.copyOf(orderItems);
+    }
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status = OrderStatus.NEW;
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 
     public void setOrderItems(List<OrderItem> orderItems) {

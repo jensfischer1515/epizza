@@ -1,5 +1,12 @@
 package epizza.order.checkout;
 
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -10,16 +17,12 @@ import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 
@@ -64,7 +67,18 @@ public class OrderController {
     }
 
     @RequestMapping(path = "/orders/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> update() {
-        return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+    public ResponseEntity<Order> update(@RequestParam OrderStatus nextStatus, @PathVariable("id") Long orderId) {
+
+        Optional<Order> orderOptional = orderService.getOrder(orderId);
+
+        if (!orderOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Order orderUpdated = orderOptional.get();
+        orderUpdated.setStatus(nextStatus);
+        orderService.update(orderUpdated);
+
+        return ResponseEntity.ok(orderUpdated);
     }
 }
