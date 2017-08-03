@@ -12,7 +12,8 @@ echo
 echo -e "${RED}+-------------------------------------------+${NC}"
 echo -e "${RED}| dockerizing 'config-server'               |${NC}"
 echo -e "${RED}+-------------------------------------------+${NC}"
-./config-server/gradlew -p config-server buildDockerImage -x check
+./config-server/gradlew -p config-server assembleDockerImageContents -x check
+docker build --no-cache -t epizza/config-server:latest ./config-server/build/docker
 fi
 
 if echo ${COMPONENT} | grep -q 'all\|service\|order'; then
@@ -20,7 +21,8 @@ echo
 echo -e "${RED}+-------------------------------------------+${NC}"
 echo -e "${RED}| dockerizing 'order'                       |${NC}"
 echo -e "${RED}+-------------------------------------------+${NC}"
-./order/gradlew -p order buildDockerImage -x check
+./order/gradlew -p order assembleDockerImageContents -x check
+docker build --no-cache -t epizza/order:latest ./order/build/docker
 fi
 
 if echo ${COMPONENT} | grep -q 'all\|service\|bakery'; then
@@ -28,7 +30,8 @@ echo
 echo -e "${RED}+-------------------------------------------+${NC}"
 echo -e "${RED}| dockerizing 'bakery'                      |${NC}"
 echo -e "${RED}+-------------------------------------------+${NC}"
-./bakery/gradlew -p bakery buildDockerImage -x check
+./bakery/gradlew -p bakery assembleDockerImageContents -x check
+docker build --no-cache -t epizza/bakery:latest ./bakery/build/docker
 fi
 
 if echo ${COMPONENT} | grep -q 'all\|ui\|delivery'; then
@@ -36,7 +39,8 @@ echo
 echo -e "${RED}+-------------------------------------------+${NC}"
 echo -e "${RED}| dockerizing 'delivery'                    |${NC}"
 echo -e "${RED}+-------------------------------------------+${NC}"
-./delivery/gradlew -p delivery buildDockerImage -x check
+./delivery/gradlew -p delivery assembleDockerImageContents -x check
+docker build --no-cache -t epizza/delivery:latest ./delivery/build/docker
 fi
 
 if echo ${COMPONENT} | grep -q 'all\|ui\|web'; then
